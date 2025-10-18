@@ -1,6 +1,13 @@
--- Limpeza para reexecução segura (FK: apague contas antes)
-DELETE FROM contas;
-DELETE FROM usuarios;
+-- Limpeza e reinício de sequência para reexecução segura
+SET REFERENTIAL_INTEGRITY FALSE;
+
+TRUNCATE TABLE contas;
+TRUNCATE TABLE usuarios;
+
+ALTER TABLE usuarios ALTER COLUMN id RESTART WITH 1;
+ALTER TABLE contas ALTER COLUMN id RESTART WITH 1;
+
+SET REFERENTIAL_INTEGRITY TRUE;
 
 -- ==========================
 -- USUÁRIOS (20 registros, CPFs únicos)
@@ -51,3 +58,7 @@ INSERT INTO contas (id, numero, agencia, cpf, nome, tipo_de_conta, endereco, sal
 (18, 1018, '006', '66677788891', 'Sabrina Freitas',   'CONTA_CORRENTE', 'Rua R, 1800',   110.00, 18),
 (19, 1019, '006', '77788899902', 'Thiago Rodrigues',  'CONTA_CORRENTE', 'Rua S, 1900',  7500.00, 19),
 (20, 1020, '006', '88899900013', 'Viviane Oliveira',  'CONTA_POUPANCA', 'Rua T, 2000',   525.00, 20);
+
+-- Ajusta o próximo ID (o ponteiro do auto-increment) para a próxima posição livre
+ALTER TABLE usuarios ALTER COLUMN id RESTART WITH 21;
+ALTER TABLE contas   ALTER COLUMN id RESTART WITH 21;
